@@ -113,8 +113,9 @@ class MainWindow(QMainWindow):
         
         # Table
         self.table = QTableWidget()
-        self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(["No", "Nama Gambar", "Lokasi File", "Tanggal Ditambahkan"])
+        self.table.verticalHeader().setVisible(False)
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["No", "Nama Gambar", "Lokasi File", "Tanggal Ditambahkan", "Hasil Ekstraksi"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
@@ -203,13 +204,17 @@ class MainWindow(QMainWindow):
             self.table.insertRow(row)
             
             # Add data to row (skip the number column)
-            self.table.setItem(row, 0, QTableWidgetItem(row_data[1]))  # nama_file
-            self.table.setItem(row, 1, QTableWidgetItem(row_data[2]))  # lokasi_file
-            self.table.setItem(row, 2, QTableWidgetItem(row_data[4]))  # tanggal
-            self.table.setItem(row, 3, QTableWidgetItem(row_data[3]))  # hasil_ekstraksi
+            no_item = QTableWidgetItem(str(row + 1))  # Kolom "No"
+            no_item.setData(Qt.UserRole, row_data[0])  # Simpan ID tersembunyi
+            self.table.setItem(row, 0, no_item)
+
+            self.table.setItem(row, 1, QTableWidgetItem(row_data[1]))  # nama_file
+            self.table.setItem(row, 2, QTableWidgetItem(row_data[2]))  # lokasi_file
+            self.table.setItem(row, 3, QTableWidgetItem(row_data[4]))  # tanggal
+            self.table.setItem(row, 4, QTableWidgetItem(row_data[3]))  # hasil_ekstraksi
             
             # Store the DB ID as data in the first column
-            self.table.item(row, 0).setData(Qt.UserRole, row_data[0])
+            # self.table.item(row, 0).setData(Qt.UserRole, row_data[0])
 
     def search_data(self):
         search_text = self.search_input.text().lower()
@@ -235,14 +240,18 @@ class MainWindow(QMainWindow):
             if (search_text == str(idx).lower() or search_text in str(row[1]).lower()):
                 self.table.insertRow(self.table.rowCount())
                 
+                no_item = QTableWidgetItem(str(self.table.rowCount()))  # Kolom "No"
+                no_item.setData(Qt.UserRole, row[0])  # Simpan ID tersembunyi
+                self.table.setItem(self.table.rowCount() - 1, 0, no_item)
+
                 # Add data to row
-                self.table.setItem(self.table.rowCount() - 1, 0, QTableWidgetItem(row[1]))
-                self.table.setItem(self.table.rowCount() - 1, 1, QTableWidgetItem(row[2]))
-                self.table.setItem(self.table.rowCount() - 1, 2, QTableWidgetItem(row[4]))
-                self.table.setItem(self.table.rowCount() - 1, 3, QTableWidgetItem(row[3]))
+                self.table.setItem(self.table.rowCount() - 1, 1, QTableWidgetItem(row[1]))
+                self.table.setItem(self.table.rowCount() - 1, 2, QTableWidgetItem(row[2]))
+                self.table.setItem(self.table.rowCount() - 1, 3, QTableWidgetItem(row[4]))
+                self.table.setItem(self.table.rowCount() - 1, 4, QTableWidgetItem(row[3]))
                 
                 # Store the DB ID as data in the first column
-                self.table.item(self.table.rowCount() - 1, 0).setData(Qt.UserRole, row[0])
+                # self.table.item(self.table.rowCount() - 1, 0).setData(Qt.UserRole, row[0])
                 
                 found = True
                 found_data = {'id': row[0], 'nama_file': row[1], 'lokasi_file': row[2], 
