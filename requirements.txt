@@ -1,0 +1,6 @@
+pillow
+pytesseract
+mysql-connector-python
+opencv-python
+numpy
+pyside6
