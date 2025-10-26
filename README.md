@@ -1,4 +1,4 @@
-# Aplikasi Ekstraksi Text dari Citra
+# Aplikasi Ekstraksi Text dari Citrawikwok
 
 Aplikasi ini dibuat untuk mengekstrak teks dari gambar menggunakan OCR (Optical Character Recognition) dengan antarmuka grafis modern berbasis PySide6.
 
